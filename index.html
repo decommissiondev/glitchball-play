@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0626" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="GLITCHBALL" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <title>GLITCHBALL</title>
+    <script type="module" crossorigin src="./assets/index-wP5c8cEo.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CNlTAZJp.css">
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+    <div id="glitch-flash"></div>
+    <div id="edge-flash"></div>
+    <div id="letterbox"><div class="bar top"></div><div class="bar bottom"></div></div>
+    <div id="cut-wipe"></div>
+    <div id="floaters"></div>
+
+    <!-- Boot / unsupported -->
+    <div id="boot" class="screen active">
+      <div class="logo small" data-text="GLITCHBALL">GLITCHBALL</div>
+      <p class="muted" id="boot-msg">Loading the Rift Arena…</p>
+    </div>
+
+    <!-- Main menu -->
+    <div id="screen-menu" class="screen">
+      <div class="menu-col">
+        <div class="logo" data-text="GLITCHBALL">GLITCHBALL</div>
+        <p class="tagline">Football, but the rules of reality are broken.</p>
+        <button class="btn primary big" data-action="play">PLAY</button>
+        <div class="row">
+          <button class="btn" data-action="howto">HOW TO PLAY</button>
+          <button class="btn" data-action="locker">LOCKER</button>
+          <button class="btn" data-action="settings">SETTINGS</button>
+        </div>
+        <p class="stats-line" id="menu-stats"></p>
+      </div>
+      <p class="corner-note">Prototype · offline · no accounts · no ads</p>
+      <div id="install-hint" class="hidden"><span>For full screen, tap <b>Share</b> then <b>Add to Home Screen</b>.</span><button aria-label="Dismiss">✕</button></div>
+    </div>
+
+    <!-- Character select -->
+    <div id="screen-select" class="screen">
+      <div class="select-top">
+        <button class="btn ghost" data-action="back">‹ BACK</button>
+        <h2>CHOOSE YOUR PLAYER</h2>
+        <div class="pills" id="difficulty-pills">
+          <button class="pill" data-diff="easy">Easy</button>
+          <button class="pill" data-diff="normal">Normal</button>
+          <button class="pill" data-diff="hard">Hard</button>
+        </div>
+      </div>
+      <div class="cards" id="char-cards"></div>
+      <button class="btn primary big" data-action="start">PLAY MATCH</button>
+    </div>
+
+    <!-- How to play -->
+    <div id="screen-howto" class="screen scroll">
+      <div class="panel">
+        <button class="btn ghost" data-action="back">‹ BACK</button>
+        <h2>HOW TO PLAY</h2>
+        <div class="howto-grid">
+          <div class="howto"><div class="hicon">🕹️</div><h3>Move</h3><p>Drag anywhere on the left side. Push the stick all the way to <b>sprint</b>. Keyboard: WASD, Shift to sprint.</p></div>
+          <div class="howto"><div class="hicon">⚽</div><h3>Shoot</h3><p>Tap <b>SHOOT</b> for a quick shot. Hold it to charge a power shot, then let go. Keyboard: K or Space.</p></div>
+          <div class="howto"><div class="hicon">➡️</div><h3>Pass</h3><p><b>PASS</b> sends the ball to the teammate you are facing. Without the ball it becomes <b>PASS ME</b>: your teammates will pass to you. Keyboard: J.</p></div>
+          <div class="howto"><div class="hicon">💥</div><h3>Steal</h3><p>Without the ball, the big button becomes <b>STEAL</b>. Run at the player with the ball and tap it to grab the ball.</p></div>
+        </div>
+        <h2 class="rift-title">RIFT PASS</h2>
+        <div class="howto-steps">
+          <div class="step"><span>1</span><p>Play good football to fill your <b>Rift Energy</b>: passes, interceptions, tackles, saves and shots on target.</p></div>
+          <div class="step"><span>2</span><p>Tap <b>RIFT</b>. Time slows down.</p></div>
+          <div class="step"><span>3</span><p>Tap the pitch to place the <b>entry</b> rift near you.</p></div>
+          <div class="step"><span>4</span><p>Tap again to place the <b>exit</b> rift. Drag while placing to aim it; just tap and it aims at the goal.</p></div>
+          <div class="step"><span>5</span><p>The dotted line shows exactly where the ball will go. Press <b>PASS</b> to send it through.</p></div>
+        </div>
+        <p class="muted">Rifts only move the ball, never players. Anyone can send the ball through them, opponents too. They close a moment after the ball goes through, or after 8 seconds.</p>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div id="screen-settings" class="screen scroll">
+      <div class="panel">
+        <button class="btn ghost" data-action="back">‹ BACK</button>
+        <h2>SETTINGS</h2>
+        <div class="setting"><span>Sound</span><button class="toggle" data-setting="sound"></button></div>
+        <div class="setting"><span>Left-handed controls</span><button class="toggle" data-setting="leftHanded"></button></div>
+        <div class="setting"><span>Button size</span><div class="pills" data-choice="buttonScale"><button class="pill" data-value="small">S</button><button class="pill" data-value="medium">M</button><button class="pill" data-value="large">L</button></div></div>
+        <div class="setting"><span>Graphics</span><div class="pills" data-choice="quality"><button class="pill" data-value="auto">Auto</button><button class="pill" data-value="low">Low</button><button class="pill" data-value="medium">Mid</button><button class="pill" data-value="high">High</button></div></div>
+        <div class="setting"><span>Reduce motion &amp; flashing</span><button class="toggle" data-setting="reduceMotion"></button></div>
+        <div class="setting"><span>Show FPS (for testing)</span><button class="toggle" data-setting="showFps"></button></div>
+        <p class="muted" id="settings-note">Graphics changes apply after reloading the game.</p>
+        <p class="muted">GLITCHBALL keeps your progress on this device only. It collects no personal information and sends nothing over the internet.</p>
+      </div>
+    </div>
+
+    <!-- Locker -->
+    <div id="screen-locker" class="screen scroll">
+      <div class="panel wide">
+        <button class="btn ghost" data-action="back">‹ BACK</button>
+        <h2>LOCKER</h2>
+        <p class="muted">Cosmetics change how things look. They never change how anyone plays.</p>
+        <div id="locker-list"></div>
+        <h3 class="premium-head">Coming later</h3>
+        <p class="muted">These are ideas for future paid cosmetics. Nothing can be bought in this prototype. Any future purchase would need a grown-up's approval first.</p>
+        <div id="locker-premium" class="premium-grid"></div>
+      </div>
+    </div>
+
+    <!-- In-match HUD -->
+    <div id="hud" class="hidden">
+      <div class="scorebar">
+        <div class="team home"><span class="tname" id="name-home">NOVA</span><span class="score" id="score-home">0</span></div>
+        <div class="clock" id="clock">2:30</div>
+        <div class="team away"><span class="score" id="score-away">0</span><span class="tname" id="name-away">HAVOC</span></div>
+      </div>
+      <button class="icon-btn" id="btn-pause" aria-label="Pause">❚❚</button>
+      <div id="toasts"></div>
+      <div id="banner"><div id="banner-main"></div><div id="banner-sub"></div></div>
+      <div id="aim-hint" class="hidden"><span id="aim-text">Tap the pitch to place the ENTRY rift</span><span id="aim-reason"></span></div>
+      <div id="replay-tag" class="hidden"><span class="dot"></span>REPLAY<span id="replay-slow" class="hidden">SLOW-MO</span><small>tap to skip</small></div>
+      <div id="tutorial-tip" class="hidden"></div>
+      <div id="call-tip" class="hidden"></div>
+
+      <div id="joy-zone"></div>
+      <div id="joy-ghost"><div class="ring"><span>◀</span><span>▲</span><span>▶</span><span>▼</span><b></b></div><em>MOVE</em></div>
+      <div id="joy-base"><div id="joy-knob"></div></div>
+      <div id="stamina"><div id="stamina-fill"></div></div>
+
+      <div id="buttons">
+        <span class="cap" id="cap-rift"></span>
+        <span class="cap" id="cap-pass"></span>
+        <span class="cap" id="cap-action"></span>
+        <button class="abtn" id="btn-rift" aria-label="Rift">
+          <svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="45" /><circle class="ring-fill" id="rift-ring" cx="50" cy="50" r="45" /></svg>
+          <span class="lbl" id="rift-label">RIFT</span>
+        </button>
+        <button class="abtn" id="btn-pass" aria-label="Pass"><span class="lbl" id="pass-label">PASS</span></button>
+        <button class="abtn big" id="btn-action" aria-label="Shoot"><span class="lbl" id="action-label">SHOOT</span></button>
+      </div>
+      <button class="icon-btn hidden" id="btn-cancel-aim" aria-label="Cancel rift">✕</button>
+    </div>
+    <div id="aim-layer"></div>
+
+    <!-- Pause -->
+    <div id="screen-pause" class="screen dim">
+      <div class="panel narrow">
+        <h2>PAUSED</h2>
+        <button class="btn primary" data-action="resume">RESUME</button>
+        <button class="btn" data-action="restart">RESTART MATCH</button>
+        <button class="btn" data-action="quit">QUIT TO MENU</button>
+      </div>
+    </div>
+
+    <!-- End of match -->
+    <div id="screen-end" class="screen dim">
+      <div class="panel end">
+        <div class="result" id="end-result">VICTORY</div>
+        <div class="end-score" id="end-score">3 – 1</div>
+        <div class="end-grid">
+          <div class="mvp" id="end-mvp"></div>
+          <div class="mystats" id="end-stats"></div>
+        </div>
+        <div id="end-unlocks"></div>
+        <div class="row">
+          <button class="btn primary" data-action="rematch">REMATCH</button>
+          <button class="btn watch" id="btn-watch" data-action="watch">▶ WATCH BEST GOAL</button>
+          <button class="btn" data-action="change">CHANGE PLAYER</button>
+          <button class="btn" data-action="menu">MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="fps" class="hidden"></div>
+    <div id="rotate-hint"><div>↻</div><p>Turn your phone sideways to play</p></div>
+  </body>
+</html>
